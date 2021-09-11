@@ -9,6 +9,6 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface BalanceRepository extends ReactiveCrudRepository<BalanceReport, Long> {
 
-    @Query("select balance from balance_report where owner=:owner ")
-    Mono<Double> findBalance(long owner);
+    @Query("select * from balance_report where owner=:owner ")
+    Mono<BalanceReport> findBalance(long owner);
 }
