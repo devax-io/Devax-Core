@@ -25,4 +25,13 @@ public class BalanceReport {
     String moreInfo;
     double blocked;
 
+    public BalanceReport setLastModified(String lastModified) {
+        this.lastModified = lastModified;
+        return this;
+    }
+
+    public BalanceReport setBalance(double balance) {
+        this.balance = balance;
+        return this;
+    }
 }

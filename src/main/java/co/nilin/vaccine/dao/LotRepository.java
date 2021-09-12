@@ -9,6 +9,4 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface LotRepository   extends ReactiveCrudRepository<Lot, Long> {
-    @Query("select * from Lot where ref_Id=:ref_id")
-    Mono<Lot> findById(Long aLong);
 }

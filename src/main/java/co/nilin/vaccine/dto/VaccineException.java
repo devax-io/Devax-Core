@@ -1,15 +1,10 @@
 package co.nilin.vaccine.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+public class VaccineException extends RuntimeException {
+    protected String code;
 
-@Builder
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class VaccineException  extends RuntimeException{
-    int code;
-    String message;
+    public VaccineException(String code, String message) {
+        super(message);
+        this.code = code;
+    }
 }

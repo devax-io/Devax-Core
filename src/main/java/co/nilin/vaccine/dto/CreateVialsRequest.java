@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateVialsRequest {
     long parentId;
-    long agent;
     List<Vial> vials;
 
 }

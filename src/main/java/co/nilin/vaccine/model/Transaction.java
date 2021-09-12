@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table
+@Table("tx")
 @Builder
 @Data
 @AllArgsConstructor
@@ -16,7 +16,9 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Transaction {
     @Id
     long id;
+    @Column("src")
     long from;
+    @Column("dest")
     long to;
     @Column("create_date")
     String createDate;
