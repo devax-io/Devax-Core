@@ -59,16 +59,21 @@ public class CreateEntity {
 
     @RequestMapping("/vial")
     public Mono<GeneralResponse> createVial(@RequestBody CreateVialsRequest vials) {
-      log.info(vials.getVials().get(0).getRefId());
-      log.info("=====================");
         return lotRepository.findById(vials.getParentId())
-                .switchIfEmpty(Mono.error( new  VaccineException("500","invalid lot")))
+                .switchIfEmpty(Mono.error(new VaccineException("500", "invalid lot")))
                 .flatMap(p -> Mono.just(vials.getVials())
                         .flatMapMany(Flux::fromIterable)
-                        .flatMap(v -> vialRepository.save(Vial.builder().createDate(new Date().toString()).build()))
-                        .zipWith(vc -> balanceRepository.findBalance(p.getAgent())
-                                .map(b -> balanceRepository.save(b.setBalance(b.getBalance() + 1).setLastModified(new Date().toString()))
-                                        .delayElement(Duration.ofSeconds(3))))
+                        .flatMap(v -> vialRepository.save(Vial.builder()
+                                .parentId(vials.getParentId())
+                                .refId(v.getRefId())
+                                .currentOwner(p.getAgent())
+                                .createDate(new Date().toString()).build())
+                                .zipWhen(vc -> {
+                                    log.info(p.getAgent()+"");
+                                    log.info("================");
+                                    return balanceRepository.updateBalance(p.getAgent(),1.0,new Date().toString());
+                                }).log())
+                        .collectList()
                 )
                 .flatMap(u -> Mono.just(new GeneralResponse("vials created")));
 

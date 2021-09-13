@@ -23,6 +23,17 @@ public class Vial {
     String createDate;
     @Column("more_info")
     String moreInfo;
+    @Column("current_owner")
+    long currentOwner;
+
+    public long getCurrentOwner() {
+        return currentOwner;
+    }
+
+    public Vial setCurrentOwner(long currentOwner) {
+        this.currentOwner = currentOwner;
+        return this;
+    }
 
     public Vial setCreateDate(String createDate) {
         this.createDate = createDate;

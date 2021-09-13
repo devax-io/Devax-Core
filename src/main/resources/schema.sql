@@ -46,6 +46,7 @@
         src VARCHAR(255)  not null,
         dest VARCHAR(255)  not null,
         value VARCHAR(255),
+        vial VARCHAR(255),
         create_date VARCHAR(255),
         more_info VARCHAR(255)) ;
 
@@ -54,4 +55,5 @@
         ref_id VARCHAR(255) unique not null,
         parent_id VARCHAR(255)  not null,
         create_date VARCHAR(255),
+        current_owner VARCHAR(255) not null,
         more_info VARCHAR(255)) ;

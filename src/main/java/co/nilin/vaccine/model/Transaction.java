@@ -20,9 +20,10 @@ public class Transaction {
     long from;
     @Column("dest")
     long to;
+    long vial;
+    double value;
     @Column("create_date")
     String createDate;
-    double value;
     @Column("more_info")
     String moreInfo;
 

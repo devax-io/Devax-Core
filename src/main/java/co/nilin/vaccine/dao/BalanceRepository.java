@@ -6,9 +6,14 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import java.util.Date;
+
 @Repository
 public interface BalanceRepository extends ReactiveCrudRepository<BalanceReport, Long> {
 
     @Query("select * from balance_report where owner=:owner ")
     Mono<BalanceReport> findBalance(long owner);
+
+    @Query("update balance_report set balance = balance + :value , last_modified = :lastModified where owner = :owner ")
+    Mono<BalanceReport> updateBalance(long owner,double value,String lastModified);
 }

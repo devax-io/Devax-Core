@@ -7,6 +7,4 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Mono;
 
 public interface VialRepository   extends ReactiveCrudRepository<Vial, Long> {
-    @Query("select * from Vial where ref_Id=:ref_id")
-    Mono<Vial> findById(Long aLong);
 }
