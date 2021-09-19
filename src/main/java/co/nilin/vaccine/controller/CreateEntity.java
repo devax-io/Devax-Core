@@ -14,6 +14,7 @@ import co.nilin.vaccine.model.Lot;
 import co.nilin.vaccine.model.Vial;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,7 +42,7 @@ public class CreateEntity {
     @Autowired
     BalanceRepository balanceRepository;
 
-    @RequestMapping("/account")
+    @PostMapping("/account")
     public Mono<GeneralResponse> createAccount(@RequestBody Account account) {
         try {
             EnumUtils.findEnumInsensitiveCase(AccountType.class, account.getType());
@@ -58,7 +59,7 @@ public class CreateEntity {
     }
 
 
-    @RequestMapping("/lot")
+    @PostMapping("/lot")
     public Mono<GeneralResponse> createLot(@RequestBody Lot lot) {
         lot.setCreateDate(new Date().toString());
         return validAccount(lot.getManufacture(), AccountType.manufacture.name())
@@ -69,7 +70,7 @@ public class CreateEntity {
 
     }
 
-    @RequestMapping("/vial")
+    @PostMapping("/vial")
     public Mono<GeneralResponse> createVial(@RequestBody CreateVialsRequest request) {
         if (request.getManufacture() == 0 && request.getParentRefId().isEmpty() && request.getParentRefId() == null)
             throw new VaccineException("500", "manufacture and lot reference Id are required");

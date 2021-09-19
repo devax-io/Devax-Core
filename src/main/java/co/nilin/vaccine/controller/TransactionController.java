@@ -37,7 +37,7 @@ public class TransactionController {
     @Autowired
     LotRepository lotRepository;
 
-    @RequestMapping("/{from}/to/{to}")
+    @PostMapping("/{from}/to/{to}")
     public Mono<GeneralResponse> transfer(@RequestBody TransferRequest request,
                                           @PathVariable("from") long src,
                                           @PathVariable("to") long dest) throws VaccineException {
