@@ -34,6 +34,8 @@ public class QueryEntity {
     BalanceRepository balanceRepository;
     @Autowired
     TransactionRepository txRepository;
+    @Autowired
+    SignRepository signRepository;
 
     @GetMapping("/account/{accountId}")
     public Mono<GenericResponse> account(@PathVariable("accountId") long accountId) {
@@ -141,8 +143,8 @@ public class QueryEntity {
 
     @GetMapping("/balance/{accountId}")
     public Mono<GenericResponse> balance(@PathVariable("accountId") long accountId) {
-        return  validAccount(accountId)
-                .flatMap(a-> balanceRepository.findById(accountId))
+        return validAccount(accountId)
+                .flatMap(a -> balanceRepository.findById(accountId))
                 .flatMap(r -> Mono.just(new GenericResponse("200", r)));
 
     }
@@ -155,6 +157,47 @@ public class QueryEntity {
 
     }
 
+    @GetMapping("/signs")
+    public Mono<GenericResponse> signs() {
+        return signRepository.findAll()
+                .collectList()
+                .flatMap(r -> Mono.just(new GenericResponse("200", r)));
+
+    }
+
+
+    @GetMapping("/signs/agent/{agent}")
+    public Mono<GenericResponse> signer(@PathVariable("agent") long agent) {
+        return signRepository.findByAgent(agent)
+                .collectList()
+                .flatMap(r -> Mono.just(new GenericResponse("200", r)));
+
+    }
+
+    @GetMapping("/signs/act/{actType}/{actId}")
+    public Mono<GenericResponse> signed(@PathVariable("actType") String actType,
+                                        @PathVariable("actId") long actId) {
+        return signRepository.findByActAndType(actId, actType)
+                .collectList()
+                .flatMap(r -> Mono.just(new GenericResponse("200", r)));
+
+    }
+
+    @GetMapping("/general")
+    public Mono<GenericResponse> general() {
+        return lotRepository.count()
+                .zipWhen(l -> vialRepository.count())
+                .zipWhen(lv -> accountRepository.count())
+                .zipWhen(lva -> txRepository.count())
+                .flatMap(lvat -> Mono.just(new GenericResponse("200", GeneralQuery.builder()
+                        .totalLots(lvat.getT1().getT1().getT1())
+                        .totalVials(lvat.getT1().getT1().getT2())
+                        .totalAccounts(lvat.getT1().getT2())
+                        .totalTransactions(lvat.getT2()).build())));
+
+    }
+
+
     public Mono<Account> validAccount(long accountId, String type) {
         return accountRepository.findByIdAndType(accountId, type)
                 .switchIfEmpty(Mono.error(new VaccineException("500", "invalid " + type + " account ")));
@@ -164,5 +207,6 @@ public class QueryEntity {
         return accountRepository.findById(accountId)
                 .switchIfEmpty(Mono.error(new VaccineException("500", "invalid  account ")));
     }
+
 
 }

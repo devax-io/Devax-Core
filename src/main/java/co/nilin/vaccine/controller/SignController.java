@@ -12,7 +12,10 @@ import co.nilin.vaccine.model.Sign;
 import jdk.jfr.internal.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.web.bind.annotation.*;
+import org.yaml.snakeyaml.util.EnumUtils;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
@@ -27,28 +30,36 @@ public class SignController {
     @Autowired
     AccountRepository accountRepository;
 
-//    @RequestMapping("/{act}/{actId}")
-//    public Mono<GeneralResponse> sign(@RequestBody Sign signRequest,
-//                                      @PathVariable("act") ActType act,
-//                                      @PathVariable("actId") long actId)  {
-//
-//
-//          validAccount(signRequest.getId())
-//                  .flatMap(a -> {
-//                      try {
-//                          return chooseRepo()
-//                      } catch (ClassNotFoundException e) {
-//                          e.printStackTrace();
-//                      }
-//                  })
-//
-//
-//
-//    })
-//
-//
-//}
+    @Autowired
+    private ApplicationContext appContext;
 
+    @RequestMapping("/{act}/{actId}")
+    public Mono<GeneralResponse> sign(@RequestBody Sign signRequest,
+                                      @PathVariable("act") ActType act,
+                                      @PathVariable("actId") long actId) {
+
+        try {
+            EnumUtils.findEnumInsensitiveCase(ActType.class, act.name());
+        } catch (Exception e) {
+            throw new VaccineException("500", "invalid act");
+        }
+
+        if (act.name().equals(ActType.account.name()) && actId == signRequest.getAgent())
+            throw new VaccineException("500", "invalid sign");
+
+        return validAccount(signRequest.getAgent())
+                .flatMap(a ->
+                        appContext.getBean(act.name() + "Repo", ReactiveCrudRepository.class).findById(actId)
+                ).switchIfEmpty(Mono.error(new VaccineException("500", "invalid act")))
+                .flatMap(a -> signRepository.save(Sign.builder()
+                        .act(actId)
+                        .agent(signRequest.getAgent())
+                        .type(act.name())
+                        .createDate(new Date().toString())
+                        .build()));
+
+
+    }
 
 
     public Mono<Account> validAccount(long accountId, String type) {

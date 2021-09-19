@@ -1,5 +1,5 @@
 package co.nilin.vaccine.dto;
 
 public enum ActType {
-    tx,account,lot,vial,sign
+    transaction,account,lot,vial,sign,balance
 }
