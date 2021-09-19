@@ -11,36 +11,45 @@ import co.nilin.vaccine.model.Lot;
 import co.nilin.vaccine.model.Sign;
 import jdk.jfr.internal.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
 
 @RestController
+@CrossOrigin
+@RequestMapping("/vaccine/trader/sign")
+
 public class SignController {
     @Autowired
     SignRepository signRepository;
     @Autowired
     AccountRepository accountRepository;
 
-//    @RequestMapping("/sign/{act}/{actId}")
+//    @RequestMapping("/{act}/{actId}")
 //    public Mono<GeneralResponse> sign(@RequestBody Sign signRequest,
 //                                      @PathVariable("act") ActType act,
-//                                      @PathVariable("actId") long actId) {
-//        validAccount(signRequest.getId())
-//                .flatMap(s -> {
+//                                      @PathVariable("actId") long actId)  {
 //
-//                    if (act.equals(ActType.account))
-//                        return validAccount(actId)
-//                                .flatMap(signRepository.save(signRequest.builder().act(actId)
-//                                ))
 //
-//                })
+//          validAccount(signRequest.getId())
+//                  .flatMap(a -> {
+//                      try {
+//                          return chooseRepo()
+//                      } catch (ClassNotFoundException e) {
+//                          e.printStackTrace();
+//                      }
+//                  })
 //
-//    }
+//
+//
+//    })
+//
+//
+//}
+
+
 
     public Mono<Account> validAccount(long accountId, String type) {
         return accountRepository.findByIdAndType(accountId, type)

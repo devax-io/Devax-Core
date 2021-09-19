@@ -19,6 +19,7 @@ import java.util.Date;
 
 @RestController
 @Slf4j
+@CrossOrigin
 
 @RequestMapping("/vaccine/trader/transfer")
 public class TransactionController {

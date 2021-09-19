@@ -9,6 +9,7 @@ import co.nilin.vaccine.model.Vial;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.yaml.snakeyaml.util.EnumUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -19,6 +20,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/vaccine/trader/query")
 @Slf4j
+@CrossOrigin
+
 public class QueryEntity {
 
     @Autowired
@@ -39,6 +42,21 @@ public class QueryEntity {
                 .switchIfEmpty(Mono.error(new VaccineException("500", "invalid account")))
                 .flatMap(r -> Mono.just(new GenericResponse("200", r)));
     }
+
+    @GetMapping("/account/{accountType/type}")
+    public Mono<GenericResponse> accountType(@PathVariable("accountType") String accountType) {
+
+        try {
+            EnumUtils.findEnumInsensitiveCase(AccountType.class, accountType);
+        } catch (Exception e) {
+            throw new VaccineException("500", "invalid account type");
+        }
+        return accountRepository.findByType(accountType)
+                .switchIfEmpty(Mono.error(new VaccineException("500", "invalid account")))
+                .collectList()
+                .flatMap(r -> Mono.just(new GenericResponse("200", r)));
+    }
+
 
     @GetMapping("/accounts")
     public Mono<GenericResponse> accounts() {

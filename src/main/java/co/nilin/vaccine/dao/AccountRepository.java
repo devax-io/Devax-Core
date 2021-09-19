@@ -15,4 +15,8 @@ public interface AccountRepository extends ReactiveCrudRepository<Account, Long>
 
     @Query("select * from account where id = :id and type= :type; ")
     Mono<Account> findByIdAndType(long id,String type);
+
+
+    @Query("select * from account where type= :type; ")
+    Flux<Account> findByType(String type);
 }
