@@ -45,7 +45,7 @@ public class QueryEntity {
                 .flatMap(r -> Mono.just(new GenericResponse("200", r)));
     }
 
-    @GetMapping("/account/{accountType/type}")
+    @GetMapping("/account/type/{accountType}}")
     public Mono<GenericResponse> accountType(@PathVariable("accountType") String accountType) {
 
         try {
