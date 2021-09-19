@@ -1,10 +1,7 @@
 package co.nilin.vaccine.controller;
 
 import co.nilin.vaccine.dao.*;
-import co.nilin.vaccine.dto.CreateVialsRequest;
-import co.nilin.vaccine.dto.GeneralResponse;
-import co.nilin.vaccine.dto.GenericResponse;
-import co.nilin.vaccine.dto.VaccineException;
+import co.nilin.vaccine.dto.*;
 import co.nilin.vaccine.model.Account;
 import co.nilin.vaccine.model.BalanceReport;
 import co.nilin.vaccine.model.Lot;
@@ -71,9 +68,10 @@ public class QueryEntity {
 
     @GetMapping("/vial/{manufacture}/{vialRefId}")
     public Mono<GenericResponse> vial(@PathVariable("vialRefId") String vialRefId,
-                                      @PathVariable("manufacture") String manufacture) {
+                                      @PathVariable("manufacture") long manufacture) {
 
-        return vialRepository.findByRefId(manufacture + "_" + vialRefId)
+        return validAccount(manufacture, AccountType.manufacture.name())
+                .flatMap(a -> vialRepository.findByRefId(manufacture + "_" + vialRefId))
                 .switchIfEmpty(Mono.error(new VaccineException("500", "invalid vial")))
                 .flatMap(r -> Mono.just(new GenericResponse("200", r)));
     }
@@ -92,7 +90,9 @@ public class QueryEntity {
     @GetMapping("/lot/{manufacture}/{lotRefId}/vials")
     public Mono<GenericResponse> lotVials(@PathVariable("manufacture") long manufacture,
                                           @PathVariable("lotRefId") String lotRefId) {
-        return lotRepository.findByRefId(manufacture, lotRefId)
+        return validAccount(manufacture, AccountType.manufacture.name())
+                .flatMap(a -> lotRepository.findByRefId(manufacture, lotRefId))
+                .switchIfEmpty(Mono.error(new VaccineException("500", "invalid lot")))
                 .flatMap(l -> vialRepository.findByParentId(l.getId())
                         .map(c -> c.setRefId(c.getRefId().split("_")[1]))
                         .collectList())
@@ -102,11 +102,12 @@ public class QueryEntity {
 
 
     @GetMapping("/tx/{manufacture}/{vialRefId}")
-    public Mono<GenericResponse> tx(@PathVariable("manufacture") String manufacture,
+    public Mono<GenericResponse> tx(@PathVariable("manufacture") long manufacture,
                                     @PathVariable("vialRefId") String vialRefId) {
-        return txRepository.findTxOfVial(manufacture + "_" + vialRefId)
-                .map(c -> c.setVial(c.getVial().split("_")[1]))
-                .collectList()
+        return validAccount(manufacture, AccountType.manufacture.name())
+                .flatMap(a -> txRepository.findTxOfVial(manufacture + "_" + vialRefId)
+                        .map(c -> c.setVial(c.getVial().split("_")[1]))
+                        .collectList())
                 .flatMap(r -> Mono.just(new GenericResponse("200", r)));
 
     }
@@ -122,7 +123,8 @@ public class QueryEntity {
 
     @GetMapping("/balance/{accountId}")
     public Mono<GenericResponse> balance(@PathVariable("accountId") long accountId) {
-        return balanceRepository.findById(accountId)
+        return  validAccount(accountId)
+                .flatMap(a-> balanceRepository.findById(accountId))
                 .flatMap(r -> Mono.just(new GenericResponse("200", r)));
 
     }
@@ -135,5 +137,14 @@ public class QueryEntity {
 
     }
 
+    public Mono<Account> validAccount(long accountId, String type) {
+        return accountRepository.findByIdAndType(accountId, type)
+                .switchIfEmpty(Mono.error(new VaccineException("500", "invalid " + type + " account ")));
+    }
+
+    public Mono<Account> validAccount(long accountId) {
+        return accountRepository.findById(accountId)
+                .switchIfEmpty(Mono.error(new VaccineException("500", "invalid  account ")));
+    }
 
 }
