@@ -44,4 +44,9 @@ public class Vial {
         this.parentId = parentId;
         return this;
     }
+
+    public Vial setRefId(String refId) {
+        this.refId = refId;
+        return this;
+    }
 }

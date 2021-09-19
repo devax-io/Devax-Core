@@ -17,7 +17,7 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Sign {
     @Id
     long id;
-    String agent;
+    long agent;
     long act;
     String type;
     @Column("create_date")

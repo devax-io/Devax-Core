@@ -12,6 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TransferRequest {
+public class TransferRequest   {
     List<Transaction> transfers;
+    long manufacture;
+
 }

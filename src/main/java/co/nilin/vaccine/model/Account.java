@@ -1,5 +1,6 @@
 package co.nilin.vaccine.model;
 
+import co.nilin.vaccine.dto.AccountType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

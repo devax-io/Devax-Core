@@ -11,4 +11,8 @@ import reactor.core.publisher.Mono;
 public interface AccountRepository extends ReactiveCrudRepository<Account, Long> {
     @Query("select * from account where name = :name; ")
     Mono<Account> findByName(String name);
+
+
+    @Query("select * from account where id = :id and type= :type; ")
+    Mono<Account> findByIdAndType(long id,String type);
 }

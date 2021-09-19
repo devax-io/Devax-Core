@@ -20,7 +20,7 @@ public class Transaction {
     long from;
     @Column("dest")
     long to;
-    long vial;
+    String vial;
     double value;
     @Column("create_date")
     String createDate;
@@ -45,6 +45,11 @@ public class Transaction {
 
     public Transaction setValue(double value) {
         this.value = value;
+        return this;
+    }
+
+    public Transaction setVial(String vial) {
+        this.vial = vial;
         return this;
     }
 }

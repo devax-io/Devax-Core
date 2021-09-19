@@ -21,7 +21,7 @@
 
     CREATE TABLE IF NOT EXISTS  lot
         (id SERIAL PRIMARY KEY,
-        ref_id VARCHAR(255) unique not null,
+        ref_id VARCHAR(255)  not null,
         manufacture VARCHAR(255)  not null,
         pod VARCHAR(255) not null,
         exp VARCHAR(255) not null,
@@ -30,7 +30,8 @@
         cost VARCHAR(255),
         payment_proof VARCHAR(255),
         create_date VARCHAR(255),
-        more_info VARCHAR(255)) ;
+        more_info VARCHAR(255),
+        CONSTRAINT uc_lot UNIQUE (ref_id,manufacture))  ;
 
 
     CREATE TABLE IF NOT EXISTS  sign
@@ -52,8 +53,9 @@
 
    CREATE TABLE IF NOT EXISTS  vial
         (id SERIAL PRIMARY KEY,
-        ref_id VARCHAR(255) unique not null,
+        ref_id VARCHAR(255) not null unique,
         parent_id VARCHAR(255)  not null,
         create_date VARCHAR(255),
         current_owner VARCHAR(255) not null,
-        more_info VARCHAR(255)) ;
+        more_info VARCHAR(255),
+        CONSTRAINT uc_vial UNIQUE (ref_id,parent_id) ) ;

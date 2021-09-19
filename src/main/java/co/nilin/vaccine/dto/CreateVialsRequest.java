@@ -13,7 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateVialsRequest {
-    long parentId;
+    String parentRefId;
+    long manufacture;
     List<Vial> vials;
 
 }

@@ -18,7 +18,7 @@ public class Lot {
     long id;
     @Column("ref_id")
     String refId;
-    String manufacture;
+    long manufacture;
     String pod;
     String exp;
     String orig;
