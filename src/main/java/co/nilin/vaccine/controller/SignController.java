@@ -9,7 +9,6 @@ import co.nilin.vaccine.dto.VaccineException;
 import co.nilin.vaccine.model.Account;
 import co.nilin.vaccine.model.Lot;
 import co.nilin.vaccine.model.Sign;
-import jdk.jfr.internal.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
