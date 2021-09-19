@@ -33,7 +33,7 @@ public class SignController {
     @Autowired
     private ApplicationContext appContext;
 
-    @RequestMapping("/{act}/{actId}")
+    @PostMapping("/{act}/{actId}")
     public Mono<GeneralResponse> sign(@RequestBody Sign signRequest,
                                       @PathVariable("act") ActType act,
                                       @PathVariable("actId") long actId) {
