@@ -14,6 +14,7 @@ import co.nilin.vaccine.model.Lot;
 import co.nilin.vaccine.model.Vial;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 import org.yaml.snakeyaml.util.EnumUtils;
 import reactor.core.Disposable;
@@ -42,6 +43,7 @@ public class CreateEntity {
     BalanceRepository balanceRepository;
 
     @PostMapping("/account")
+    @SendTo("/topic/account")
     public Mono<GeneralResponse> createAccount(@RequestBody Account account) {
         try {
             EnumUtils.findEnumInsensitiveCase(AccountType.class, account.getType());
