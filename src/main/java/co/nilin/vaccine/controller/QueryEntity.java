@@ -8,6 +8,7 @@ import co.nilin.vaccine.model.Lot;
 import co.nilin.vaccine.model.Vial;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 import org.yaml.snakeyaml.util.EnumUtils;
 import reactor.core.publisher.Flux;
@@ -59,7 +60,7 @@ public class QueryEntity {
                 .flatMap(r -> Mono.just(new GenericResponse("200", r)));
     }
 
-
+    @SendTo("/topic/account")
     @GetMapping("/accounts")
     public Mono<GenericResponse> accounts() {
         return accountRepository.findAll()

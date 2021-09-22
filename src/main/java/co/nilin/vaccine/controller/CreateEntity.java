@@ -43,7 +43,6 @@ public class CreateEntity {
     BalanceRepository balanceRepository;
 
     @PostMapping("/account")
-    @SendTo("/topic/account")
     public Mono<GeneralResponse> createAccount(@RequestBody Account account) {
         try {
             EnumUtils.findEnumInsensitiveCase(AccountType.class, account.getType());
