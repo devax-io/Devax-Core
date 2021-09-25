@@ -8,6 +8,7 @@ import co.nilin.vaccine.model.Lot;
 import co.nilin.vaccine.model.Vial;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 import org.yaml.snakeyaml.util.EnumUtils;
@@ -61,6 +62,7 @@ public class QueryEntity {
     }
 
     @SendTo("/topic/account")
+    @MessageMapping("/accounts")
     @GetMapping("/accounts")
     public Mono<GenericResponse> accounts() {
         return accountRepository.findAll()
