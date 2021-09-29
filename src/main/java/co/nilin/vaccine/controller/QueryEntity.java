@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.yaml.snakeyaml.util.EnumUtils;
 import reactor.core.publisher.Flux;
@@ -61,13 +62,20 @@ public class QueryEntity {
                 .flatMap(r -> Mono.just(new GenericResponse("200", r)));
     }
 
-    @SendTo("/topic/account")
+    @Scheduled(fixedDelayString = "1000")
+    public String akbar(){
+        return "salam";
+    }
+    @SendTo("/accounts")
     @MessageMapping("/accounts")
     @GetMapping("/accounts")
-    public Mono<GenericResponse> accounts() {
-        return accountRepository.findAll()
-                .collectList()
-                .flatMap(r -> Mono.just(new GenericResponse("200", r)));
+    public String accounts() throws Exception {
+        return "salam asghar";
+//        Thread.sleep(1000);
+//        return akbar();
+//        return accountRepository.findAll()
+//                .collectList()
+//                .flatMap(r -> Mono.just(new GenericResponse("200", r)));
 
     }
 
