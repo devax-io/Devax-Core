@@ -45,7 +45,7 @@ public class ReactiveScheduledPushMessages implements InitializingBean {
 //                .flatMap(n -> queryEntity.accounts())
 //                .subscribe(message -> simpMessagingTemplate.convertAndSend("/topic/accounts", message));
 
-        int schedule = 7;
+        int schedule = 3;
         Flux.interval(Duration.ofSeconds(schedule))
                 // discard the incoming Long, replace it by an OutputMessage
                 .flatMap(t -> queryEntity.lots(schedule))
