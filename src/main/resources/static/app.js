@@ -19,9 +19,9 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/accounts', function (greeting) {
+        stompClient.subscribe('/topic/lots', function (greeting) {
             showGreeting(JSON.parse(greeting.body).content);
-//            console.log('msg: ',greeting.body);
+            console.log('msg: ',greeting.body);
         });
     });
 }
@@ -35,7 +35,7 @@ function disconnect() {
 }
 
 function sendName() {
-    stompClient.send("/app/accounts", {}, JSON.stringify({'name': $("#name").val()}));
+    stompClient.send("/app/lots", {}, JSON.stringify({'name': $("#name").val()}));
 }
 
 function showGreeting(message) {

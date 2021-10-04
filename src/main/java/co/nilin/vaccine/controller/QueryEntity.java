@@ -10,12 +10,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.yaml.snakeyaml.util.EnumUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
@@ -62,22 +65,24 @@ public class QueryEntity {
                 .flatMap(r -> Mono.just(new GenericResponse("200", r)));
     }
 
-    @Scheduled(fixedDelayString = "1000")
-    public String akbar(){
-        return "salam";
-    }
-    @SendTo("/accounts")
+
+
+    @SendTo("/topic/accounts")
     @MessageMapping("/accounts")
     @GetMapping("/accounts")
-    public String accounts() throws Exception {
-        return "salam asghar";
-//        Thread.sleep(1000);
-//        return akbar();
-//        return accountRepository.findAll()
-//                .collectList()
-//                .flatMap(r -> Mono.just(new GenericResponse("200", r)));
+    public Mono<GenericResponse> accounts()  {
+        return accountRepository.findAll()
+                .collectList()
+                .flatMap(r -> Mono.just(new GenericResponse("200", r)));
 
     }
+
+//        @Scheduled(fixedRate = 5000)
+//        public void sendMessage(SimpMessagingTemplate simpMessagingTemplate) {
+//            String time = new SimpleDateFormat("HH:mm").format(new Date());
+//            simpMessagingTemplate.convertAndSend("/topic/accounts", "salam asghar");
+//        }
+
 
 
     @GetMapping("/lot/{manufacture}/{lotRefId}")
@@ -96,6 +101,13 @@ public class QueryEntity {
                 .flatMap(r -> Mono.just(new GenericResponse("200", r)));
 
     }
+    public Mono<GenericResponse> lots(int  duration) {
+        return lotRepository.findAllByCreateDate(duration)
+                .collectList()
+                .flatMap(r -> Mono.just(new GenericResponse("200", r)));
+
+    }
+
 
     @GetMapping("/vial/{manufacture}/{vialRefId}")
     public Mono<GenericResponse> vial(@PathVariable("vialRefId") String vialRefId,
