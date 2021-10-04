@@ -23,11 +23,12 @@ public class ApplicationConfiguration {
     public void init() {
         log.info("scheduler1 called");
        long baseTime=1633341429;
+       int[] manufactures={1,8};
         Flux.interval(Duration.ofSeconds(5))
                 .onBackpressureDrop()
                 .flatMap( t->createEntity.createLot(Lot.builder()
                         .refId(UUID.randomUUID().toString())
-                        .manufacture(1)
+                        .manufacture(manufactures[ThreadLocalRandom.current().nextInt(0, 2)])
                         .agent(2)
                         .pod(String.valueOf(baseTime - ThreadLocalRandom.current().nextInt(0, 100)))
                         .exp(String.valueOf(baseTime - ThreadLocalRandom.current().nextInt(0, 100)))
