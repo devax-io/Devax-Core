@@ -33,7 +33,7 @@ public class BotConfiguration {
         log.info("scheduler1 called");
         long baseTime = 1633341429;
         int[] manufactures = {1, 8};
-        Flux.interval(Duration.ofSeconds(2))
+        Flux.interval(Duration.ofSeconds(10))
                 .onBackpressureDrop()
                 .map(k -> Lot.builder()
                         .refId(UUID.randomUUID().toString())
