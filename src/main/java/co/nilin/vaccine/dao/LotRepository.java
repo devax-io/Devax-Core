@@ -17,7 +17,7 @@ public interface LotRepository   extends ReactiveCrudRepository<Lot, Long> {
     Mono<Lot> findByRefId(long manufacture,String refId);
 
 
-    @Query(" select * from lot where  STR_TO_DATE(create_date, '%a %b %e %T IRST %Y') between  (now() - INTERVAL :duration SECOND) and now() ;")
+    @Query(" select * from lot where  STR_TO_DATE(create_date, '%a %b %e %T PDT %Y') between  (now() - INTERVAL :duration SECOND) and now() ;")
     Flux<Lot> findAllByCreateDate(int duration);
 
 
